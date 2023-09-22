@@ -30,11 +30,16 @@ class AppointmentGridItem extends StatelessWidget {
             end: Alignment.bottomRight,
           ),
         ),
-        child: Text(
-          appointment.name.toString(),
-          style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                color: Theme.of(context).colorScheme.onBackground,
-              ),
+        child: Center(
+          child: Text(
+            appointment.date.toString(),
+            style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                  color: Theme.of(context).colorScheme.onBackground,
+                  fontWeight: FontWeight.bold,
+                  decoration: TextDecoration.underline,
+                  decorationColor: Theme.of(context).colorScheme.onBackground,
+                ),
+          ),
         ),
       ),
     );

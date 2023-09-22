@@ -12,7 +12,9 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  final phoneController = TextEditingController();
+  final phoneController = TextEditingController(text: "7258910888");
+  TextEditingController nameController = TextEditingController(text: "Asmit Raj");
+  TextEditingController textController = TextEditingController(text: "asmitraj@gmail.com");
   final _form = GlobalKey<FormState>();
 
   
@@ -98,12 +100,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         children: [
                           const SizedBox(height: 12),
                           TextFormField(
+                            controller: nameController,
                             style: const TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold),
                             decoration: const InputDecoration(
                                 labelText: 'Name',
-                                prefixText: 'Asmit Raj'
                                 ),
                             keyboardType: TextInputType.name,
                             autocorrect: false,
@@ -122,12 +124,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                           const SizedBox(height: 12),
                           TextFormField(
+                            controller: textController,
                             style: const TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold),
                             decoration: const InputDecoration(
                                 labelText: 'Email Address',
-                                prefixText: 'asmitraj@gmail.com'
                                 ),
                             keyboardType: TextInputType.emailAddress,
                             autocorrect: false,
@@ -146,13 +148,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             },
                           ),
                           TextFormField(
+                            controller: phoneController,
                             style: const TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold),
                             decoration:
                                 const InputDecoration(
                                   labelText: 'Password',
-                                  prefixText: '1234567'
                                 ),
                             obscureText: true,
                             validator: (value) {

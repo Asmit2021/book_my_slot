@@ -1,4 +1,5 @@
 import 'package:book_my_slot/model/appointment.dart';
+import 'package:book_my_slot/screens/tabs.dart';
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 import 'package:intl/intl.dart';
@@ -19,8 +20,11 @@ class NewAppointment extends StatefulWidget {
 class _NewAppointment extends State<NewAppointment> {
   final _nameController = TextEditingController();
   final _descriptionController = TextEditingController();
+  final time = TimeOfDay.fromDateTime(DateTime.now()).toString();
   DateTime? _selectedDate;
+  final formatter = DateFormat.yMd();
   Department _selectedDepartment = Department.psychologist;
+  var count = 2;
 
   void _presentDatePicker() async {
     final now = DateTime.now();
@@ -45,11 +49,11 @@ class _NewAppointment extends State<NewAppointment> {
         builder: (ctx) => AlertDialog(
           title: const Text('Invalid input'),
           content: const Text(
-              'Please make sure a valid name, description , date and department was entered.',
-              style: TextStyle(
-                color: Colors.white,
-              ),
-              ),
+            'Please make sure a valid name, description , date and department was entered.',
+            style: TextStyle(
+              color: Colors.white,
+            ),
+          ),
           actions: [
             TextButton(
               onPressed: () {
@@ -62,11 +66,14 @@ class _NewAppointment extends State<NewAppointment> {
       );
       return;
     }
+    count++;
+    final formTime = time.substring(10, time.length - 1);
     final Appointment newAppointment = Appointment(
-      id: uuid.v4(),
+      id: (appointments.length+1).toString(),
       name: _nameController.text,
       description: _descriptionController.text,
-      time: DateTime.now().toString(),
+      time: formTime,
+      date: DateFormat('dd-MM-yyyy').format(_selectedDate!),
       department: Department.psychologist,
     );
 
@@ -84,7 +91,7 @@ class _NewAppointment extends State<NewAppointment> {
   @override
   Widget build(BuildContext context) {
     final keyboardSpace = MediaQuery.of(context).viewInsets.bottom;
-    final formatter = DateFormat.yMd();
+    
 
     return LayoutBuilder(builder: (ctx, constraints) {
       final width = constraints.maxHeight;
@@ -100,24 +107,20 @@ class _NewAppointment extends State<NewAppointment> {
               children: [
                 TextField(
                   style: const TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold
-                  ),
+                      color: Colors.white, fontWeight: FontWeight.bold),
                   controller: _nameController,
                   maxLength: 50,
                   decoration: const InputDecoration(
                     label: Text('Name'),
-                    ),
-                    textCapitalization: TextCapitalization.words,
+                  ),
+                  textCapitalization: TextCapitalization.words,
                 ),
                 const SizedBox(
                   height: 16,
                 ),
                 TextField(
                   style: const TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold
-                  ),
+                      color: Colors.white, fontWeight: FontWeight.bold),
                   controller: _descriptionController,
                   decoration: const InputDecoration(
                     label: Text('Description'),
@@ -133,7 +136,7 @@ class _NewAppointment extends State<NewAppointment> {
                     Text(
                       _selectedDate == null
                           ? 'No date selected'
-                          : formatter.format(_selectedDate!),
+                          : DateFormat('dd-MM-yyyy').format(_selectedDate!),
                       style: const TextStyle(fontSize: 20, color: Colors.white),
                     ),
                     const Spacer(),

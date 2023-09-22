@@ -32,6 +32,7 @@ class Appointment {
     required this.name,
     required this.description,
     required this.time,
+    required this.date,
     required this.department,
   });
 
@@ -39,5 +40,6 @@ class Appointment {
   final String name;
   final String description;
   final String time;
+  final String date;
   final Department department;
 }

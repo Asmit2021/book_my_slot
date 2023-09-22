@@ -7,6 +7,25 @@ import 'package:book_my_slot/widgets/new_appointments.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+var appointments = [
+    const Appointment(
+      id: '1',
+      time: "12:30",
+      department: Department.cardiologist,
+      name: 'Asmit Raj',
+      date: '16/09/2023',
+      description: 'Sick from fever',
+    ),
+    const Appointment(
+      id: '2',
+      time: "09:00",
+      department: Department.dentist,
+      name: 'Harsh Sonkar',
+      date: '17/09/2023',
+      description: 'Sick from cough',
+    ),
+  ];
+
 class TabsScreen extends StatefulWidget {
   const TabsScreen({super.key});
 
@@ -17,22 +36,7 @@ class TabsScreen extends StatefulWidget {
 }
 
 class _TableScreenState extends State<TabsScreen> {
-  var appointments = [
-    const Appointment(
-      id: '1',
-      time: "12:30",
-      department: Department.cardiologist,
-      name: 'Asmit Raj',
-      description: 'Sick from fever',
-    ),
-    const Appointment(
-      id: '2',
-      time: "09:00",
-      department: Department.dentist,
-      name: 'Harsh Sonkar',
-      description: 'Sick from cough',
-    ),
-  ];
+  
 
   void _openAddAppointmentOverlay() {
     showModalBottomSheet(
