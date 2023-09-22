@@ -1,5 +1,5 @@
-import 'package:book_my_slot/auth/login_screen.dart';
 import 'package:book_my_slot/model/appointment.dart';
+import 'package:book_my_slot/screens/profile_screen.dart';
 import 'package:book_my_slot/widgets/appointment_detail.dart';
 import 'package:book_my_slot/widgets/appointment_grid_item.dart';
 import 'package:book_my_slot/widgets/main_drawer.dart';
@@ -62,7 +62,7 @@ class _TableScreenState extends State<TabsScreen> {
     if (identifier == 'profile') {
       Navigator.of(context).push(
         MaterialPageRoute(
-          builder: (ctx) => const LoginScreen(),
+          builder: (ctx) => const ProfileScreen(),
         ),
       );
     }

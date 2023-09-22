@@ -45,7 +45,11 @@ class _NewAppointment extends State<NewAppointment> {
         builder: (ctx) => AlertDialog(
           title: const Text('Invalid input'),
           content: const Text(
-              'Please make sure a valid name, description , date and department was entered.'),
+              'Please make sure a valid name, description , date and department was entered.',
+              style: TextStyle(
+                color: Colors.white,
+              ),
+              ),
           actions: [
             TextButton(
               onPressed: () {
