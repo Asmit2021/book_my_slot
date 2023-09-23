@@ -29,7 +29,6 @@ final departmentColor = {
 class Appointment {
   const Appointment({
     required this.id,
-    required this.name,
     required this.description,
     required this.time,
     required this.date,
@@ -37,7 +36,6 @@ class Appointment {
   });
 
   final String id;
-  final String name;
   final String description;
   final String time;
   final String date;

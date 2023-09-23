@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -12,33 +13,73 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  final phoneController = TextEditingController(text: "7258910888");
-  TextEditingController nameController = TextEditingController(text: "Asmit Raj");
-  TextEditingController textController = TextEditingController(text: "asmitraj@gmail.com");
+  var _enteredEmail = 'asmitraj@gmail.com';
+  var _enteredName = 'Asmit Raj';
+  var _imageUrl = "https://webstockreview.net/images/profile-icon-png.png";
+  TextEditingController nameController =
+      TextEditingController(text: "Asmit Raj");
+  TextEditingController textController =
+      TextEditingController(text: "asmitraj@gmail.com");
   final _form = GlobalKey<FormState>();
 
-  
-  var _enteredEmail = 'asmitraj@gmail.com';
-  var _enteredPassword = '';
-  var _enteredName = '';
+  @override
+  void initState() {
+    getData();
+    super.initState();
+  }
 
   void _submit() async {
     final isValid = _form.currentState!.validate();
 
-    if (!isValid) {
+    if (!isValid ||
+        nameController.text.trim().isEmpty ||
+        textController.text.trim().isEmpty) {
+      showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: const Text(
+            'Invalid input',
+            style: TextStyle(
+              color: Colors.white,
+            ),
+          ),
+          content: const Text(
+            'Please make sure a valid name and email was entered.',
+            style: TextStyle(
+              color: Colors.white,
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(ctx);
+              },
+              child: const Text(
+                'Okay',
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+              ),
+            )
+          ],
+        ),
+      );
       return;
     }
-
+    
     _form.currentState!.save();
 
+    final authenticatedUser = FirebaseAuth.instance.currentUser!;
+
     try {
-      // if (_isLogin) {
-      //   final userCredentials = await _firebase.signInWithEmailAndPassword(
-      //       email: _enteredEmail, password: _enteredPassword);
-      // } else {
-      //   final userCredentials = await _firebase.createUserWithEmailAndPassword(
-      //       email: _enteredEmail, password: _enteredPassword);
-      // }
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(authenticatedUser.uid)
+          .set({
+        'name': _enteredName,
+        'email': _enteredEmail,
+        'image_url': _imageUrl,
+      });
     } on FirebaseAuthException catch (error) {
       if (error.code == 'email-already-in-use') {
         // ...
@@ -52,9 +93,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
+  void getData() async {
+    final authenticatedUser = FirebaseAuth.instance.currentUser!;
+    var userData = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(authenticatedUser.uid)
+        .get();
+
+    setState(() {
+      _enteredName = userData['name'];
+      nameController.text = _enteredName;
+      _enteredEmail = userData['email'];
+      textController.text = _enteredEmail;
+      _imageUrl = userData['image_url'];
+    });
+  }
+
   @override
   void dispose() {
-    phoneController.dispose();
+    nameController.dispose();
+    textController.dispose();
     super.dispose();
   }
 
@@ -75,18 +133,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 height: 15,
               ),
               Container(
-                // decoration: const BoxDecoration(
-                //     color: Colors.white, shape: BoxShape.circle),
+                decoration: BoxDecoration(
+                    shape: BoxShape.rectangle,
+                    borderRadius: BorderRadius.circular(15),
+                    border: Border.all(
+                          color: Colors.white,
+                        ),
+                    ),
                 margin: const EdgeInsets.only(
                   top: 20,
                   bottom: 20,
                   left: 20,
                   right: 20,
                 ),
-                height: 200,
-                width: 200,
-                child: Image.network(
-                    "https://webstockreview.net/images/profile-icon-png.png"),
+                height: 150,
+                width: 150,
+                clipBehavior: Clip.antiAliasWithSaveLayer,
+                child: Image.network(_imageUrl),
               ),
               Card(
                 margin: const EdgeInsets.all(20),
@@ -105,14 +168,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold),
                             decoration: const InputDecoration(
-                                labelText: 'Name',
-                                ),
+                              labelText: 'Name',
+                            ),
                             keyboardType: TextInputType.name,
                             autocorrect: false,
                             textCapitalization: TextCapitalization.words,
                             validator: (value) {
-                              if (value == null ||
-                                  value.trim().isEmpty) {
+                              if (value == null || value.trim().isEmpty) {
                                 return 'Please enter a valid name.';
                               }
 
@@ -129,8 +191,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold),
                             decoration: const InputDecoration(
-                                labelText: 'Email Address',
-                                ),
+                              labelText: 'Email Address',
+                            ),
                             keyboardType: TextInputType.emailAddress,
                             autocorrect: false,
                             textCapitalization: TextCapitalization.none,
@@ -147,26 +209,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               _enteredEmail = value!;
                             },
                           ),
-                          TextFormField(
-                            controller: phoneController,
-                            style: const TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold),
-                            decoration:
-                                const InputDecoration(
-                                  labelText: 'Password',
-                                ),
-                            obscureText: true,
-                            validator: (value) {
-                              if (value == null || value.trim().length < 6) {
-                                return 'Password must be at least 6 characters long.';
-                              }
-                              return null;
-                            },
-                            onSaved: (value) {
-                              _enteredPassword = value!;
-                            },
-                          ),
                           const SizedBox(height: 12),
                           ElevatedButton(
                             onPressed: _submit,
@@ -177,7 +219,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ),
                             child: const Text('Update'),
                           ),
-                          
                         ],
                       ),
                     ),

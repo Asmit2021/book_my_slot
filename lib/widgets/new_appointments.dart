@@ -18,7 +18,6 @@ class NewAppointment extends StatefulWidget {
 }
 
 class _NewAppointment extends State<NewAppointment> {
-  final _nameController = TextEditingController();
   final _descriptionController = TextEditingController();
   final time = TimeOfDay.fromDateTime(DateTime.now()).toString();
   DateTime? _selectedDate;
@@ -41,13 +40,16 @@ class _NewAppointment extends State<NewAppointment> {
   }
 
   void _submitExpenseData() {
-    if (_nameController.text.trim().isEmpty ||
-        _descriptionController.text.trim().isEmpty ||
+    if ( _descriptionController.text.trim().isEmpty ||
         _selectedDate == null) {
       showDialog(
         context: context,
         builder: (ctx) => AlertDialog(
-          title: const Text('Invalid input'),
+          title: const Text('Invalid input',
+          style: TextStyle(
+              color: Colors.white,
+            ),
+          ),
           content: const Text(
             'Please make sure a valid name, description , date and department was entered.',
             style: TextStyle(
@@ -59,18 +61,20 @@ class _NewAppointment extends State<NewAppointment> {
               onPressed: () {
                 Navigator.pop(ctx);
               },
-              child: const Text('Okay'),
+              child: const Text('Okay',
+              style: TextStyle(
+              color: Colors.white,
+            ),
+              ),
             )
           ],
         ),
       );
       return;
     }
-    count++;
     final formTime = time.substring(10, time.length - 1);
     final Appointment newAppointment = Appointment(
       id: (appointments.length+1).toString(),
-      name: _nameController.text,
       description: _descriptionController.text,
       time: formTime,
       date: DateFormat('dd-MM-yyyy').format(_selectedDate!),
@@ -83,7 +87,6 @@ class _NewAppointment extends State<NewAppointment> {
 
   @override
   void dispose() {
-    _nameController.dispose();
     _descriptionController.dispose();
     super.dispose();
   }
@@ -105,16 +108,6 @@ class _NewAppointment extends State<NewAppointment> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                TextField(
-                  style: const TextStyle(
-                      color: Colors.white, fontWeight: FontWeight.bold),
-                  controller: _nameController,
-                  maxLength: 50,
-                  decoration: const InputDecoration(
-                    label: Text('Name'),
-                  ),
-                  textCapitalization: TextCapitalization.words,
-                ),
                 const SizedBox(
                   height: 16,
                 ),
