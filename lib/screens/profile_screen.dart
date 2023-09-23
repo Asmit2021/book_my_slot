@@ -13,13 +13,13 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  var _enteredEmail = 'asmitraj@gmail.com';
-  var _enteredName = 'Asmit Raj';
-  var _imageUrl = "https://webstockreview.net/images/profile-icon-png.png";
+  var _enteredEmail = '';
+  var _enteredName = '';
+  var _imageUrl = '';
   TextEditingController nameController =
-      TextEditingController(text: "Asmit Raj");
+      TextEditingController();
   TextEditingController textController =
-      TextEditingController(text: "asmitraj@gmail.com");
+      TextEditingController();
   final _form = GlobalKey<FormState>();
 
   @override
