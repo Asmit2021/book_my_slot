@@ -6,7 +6,7 @@ BookMySlot is not just a convenience for patients but also a valuable tool for h
 
 ## Tech Stack
 
-**Client:** Flutter, Dart
+**Client:** Flutter
 
 **Server:** Firebase
 
