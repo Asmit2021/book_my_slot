@@ -1,16 +1,12 @@
-# book_my_slot
 
-A new Flutter project.
+# BookMySlot
 
-## Getting Started
+BookMySlot is not just a convenience for patients but also a valuable tool for healthcare providers looking to optimize their appointment scheduling and reduce no-shows. By harnessing the power of Flutter, this app delivers a seamless and responsive user experience across both Android and iOS platforms, making it a game-changer in the healthcare industry. Say goodbye to long waiting times and hello to efficient and stress-free healthcare appointments with BookMySlot.
 
-This project is a starting point for a Flutter application.
 
-A few resources to get you started if this is your first Flutter project:
+## Tech Stack
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+**Client:** Flutter, Dart
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+**Server:** Firebase
+
