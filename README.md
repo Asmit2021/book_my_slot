@@ -6,7 +6,7 @@ BookMySlot is not just a convenience for patients but also a valuable tool for h
 
 <img align="right" alt="Hospital" width="400" src="https://cdn.dribbble.com/users/3726898/screenshots/15561676/media/7c253c514be1fcaccb10f510ddea7dcd.gif">
 
-## Tech Stack
+## 🖥️ Tech Stack
 
 **Client:** <img src="https://www.vectorlogo.zone/logos/flutterio/flutterio-icon.svg" alt="flutter" width="40" height="40"/>
 
