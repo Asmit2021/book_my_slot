@@ -16,10 +16,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   var _enteredEmail = '';
   var _enteredName = '';
   var _imageUrl = '';
-  TextEditingController nameController =
-      TextEditingController();
-  TextEditingController textController =
-      TextEditingController();
+  TextEditingController nameController = TextEditingController();
+  TextEditingController textController = TextEditingController();
   final _form = GlobalKey<FormState>();
 
   @override
@@ -66,12 +64,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
       );
       return;
     }
-    
+
     _form.currentState!.save();
 
     final authenticatedUser = FirebaseAuth.instance.currentUser!;
 
     try {
+      ScaffoldMessenger.of(context).clearSnackBars();
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Your Data has been updated.')));
       await FirebaseFirestore.instance
           .collection('users')
           .doc(authenticatedUser.uid)
@@ -132,14 +133,39 @@ class _ProfileScreenState extends State<ProfileScreen> {
               const SizedBox(
                 height: 15,
               ),
+              // Stack(
+              //   alignment: AlignmentDirectional.center,
+              //   children: [
+              //     Container(
+              //   decoration: BoxDecoration(
+              //       shape: BoxShape.rectangle,
+              //       borderRadius: BorderRadius.circular(15),
+              //       border: Border.all(
+              //             color: Colors.white,
+              //           ),
+              //       ),
+              //   margin: const EdgeInsets.only(
+              //     top: 20,
+              //     bottom: 20,
+              //     left: 20,
+              //     right: 20,
+              //   ),
+              //   height: 150,
+              //   width: 150,
+              //   clipBehavior: Clip.antiAliasWithSaveLayer,
+              //   //child: Image.network(_imageUrl),
+              // ),
+              // //Center(child: CircleAvatar(child: Image.network(_imageUrl)))
+              // ],
+              //),
               Container(
                 decoration: BoxDecoration(
-                    shape: BoxShape.rectangle,
-                    borderRadius: BorderRadius.circular(15),
-                    border: Border.all(
-                          color: Colors.white,
-                        ),
-                    ),
+                  shape: BoxShape.rectangle,
+                  borderRadius: BorderRadius.circular(15),
+                  border: Border.all(
+                    color: Colors.white,
+                  ),
+                ),
                 margin: const EdgeInsets.only(
                   top: 20,
                   bottom: 20,
