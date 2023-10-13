@@ -8,9 +8,12 @@ BookMySlot is not just a convenience for patients but also a valuable tool for h
 
 ## 🖥️ Tech Stack
 
-**Client:** <img src="https://www.vectorlogo.zone/logos/flutterio/flutterio-icon.svg" alt="flutter" width="40" height="40"/>
+**Client:** <a href="https://flutter.dev" target="_blank" rel="noreferrer"> <img src="https://www.vectorlogo.zone/logos/flutterio/flutterio-icon.svg" alt="flutter" width="40" height="40"/> </a>
 
-**Server:** <img src="https://www.vectorlogo.zone/logos/firebase/firebase-icon.svg" alt="firebase" width="40" height="40"/>
+
+**Server:** <a href="https://nodejs.org" target="_blank" rel="noreferrer"> <img src="https://brandeps.com/icon-download/N/Nodejs-small-icon-vector-01.svg" alt="nodejs" width="40" height="40"/> </a>
+<a href="https://www.mongodb.com/" target="_blank" rel="noreferrer"> <img src="https://www.vectorlogo.zone/logos/mongodb/mongodb-icon.svg" alt="mongodb" width="40" height="40"/> </a>
+<a href="https://firebase.google.com/" target="_blank" rel="noreferrer"> <img src="https://www.vectorlogo.zone/logos/firebase/firebase-icon.svg" alt="firebase" width="40" height="40"/> </a>
 
 ## Screenshots
 ![ezgif com-resize](https://github.com/Asmit2021/book_my_slot/assets/113445568/dedb147f-c52a-49cb-9f33-e22e27539e4c)
