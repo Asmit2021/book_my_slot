@@ -1,5 +1,6 @@
 import 'package:book_my_slot/auth/login_screen.dart';
 import 'package:book_my_slot/auth/splash_screen.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:book_my_slot/screens/tabs.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -22,7 +23,7 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   runApp(
-    const App(),
+    const ProviderScope(child: App()),
   );
 }
 

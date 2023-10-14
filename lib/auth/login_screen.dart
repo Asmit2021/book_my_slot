@@ -1,78 +1,93 @@
 import 'dart:io';
 
+import 'package:book_my_slot/providers/user_provider.dart';
+import 'package:book_my_slot/services/auth_services.dart';
+import 'package:book_my_slot/utils/utils.dart';
 import 'package:book_my_slot/widgets/user_image_picker.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final _firebase = FirebaseAuth.instance;
 
-class LoginScreen extends StatefulWidget {
+class LoginScreen extends ConsumerStatefulWidget {
   static const routeName = '/login-screen';
   const LoginScreen({Key? key}) : super(key: key);
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  ConsumerState<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _LoginScreenState extends ConsumerState<LoginScreen> {
   final phoneController = TextEditingController();
   final _form = GlobalKey<FormState>();
   File? _selectedImage;
+  final AuthService authService = AuthService();
 
   var _isAuthenticating = false;
   var _isLogin = true;
   var _enteredEmail = '';
   var _enteredPassword = '';
   var _enteredName = '';
+  var _enteredPhone = '';
 
   void _submit() async {
     final isValid = _form.currentState!.validate();
-
-    if (!isValid || !_isLogin && _selectedImage == null) {
+    if (!isValid) {
       // show error message ...
       return;
     }
-
     _form.currentState!.save();
 
     try {
-      setState(() {
-        _isAuthenticating = true;
-      });
+      // setState(() {
+      //   _isAuthenticating = true;
+      // });
       if (_isLogin) {
-        final userCredentials = await _firebase.signInWithEmailAndPassword(
-            email: _enteredEmail, password: _enteredPassword);
+        // final userCredentials = await _firebase.signInWithEmailAndPassword(
+        //     email: _enteredEmail, password: _enteredPassword);
+        authService.signInUser(
+            context: context,
+            ref: ref,
+            email: _enteredEmail,
+            password: _enteredPassword,);
       } else {
-        final userCredentials = await _firebase.createUserWithEmailAndPassword(
-            email: _enteredEmail, password: _enteredPassword);
+        authService.signUpUser(
+          context: context,
+          name: _enteredName,
+          email: _enteredEmail,
+          password: _enteredPassword,
+          phone: _enteredPhone,
+        );
 
-        final storageRef = FirebaseStorage.instance
-            .ref()
-            .child('user_images')
-            .child('${userCredentials.user!.uid}.jpg');
+        // final userCredentials = await _firebase.createUserWithEmailAndPassword(
+        //     email: _enteredEmail, password: _enteredPassword);
 
-        await storageRef.putFile(_selectedImage!);
-        final imageUrl = await storageRef.getDownloadURL();
+        // final storageRef = FirebaseStorage.instance
+        //     .ref()
+        //     .child('user_images')
+        //     .child('${_enteredEmail}.jpg');
 
-        await FirebaseFirestore.instance
-            .collection('users')
-            .doc(userCredentials.user!.uid)
-            .set({    
-          'name': _enteredName,
-          'email': _enteredEmail,
-          'image_url': imageUrl,
-        });
+        // await storageRef.putFile(_selectedImage!);
+        //final imageUrl = await storageRef.getDownloadURL();
+
+        // ignore: use_build_context_synchronously
+        // await FirebaseFirestore.instance
+        //     .collection('users')
+        //     .doc(userCredentials.user!.uid)
+        //     .set({
+        //   'name': _enteredName,
+        //   'email': _enteredEmail,
+        //   'image_url': imageUrl,
+        // });
       }
-    } on FirebaseAuthException catch (error) {
-      if (error.code == 'email-already-in-use') {
-        // ...
-      }
+    } catch (error) {
       ScaffoldMessenger.of(context).clearSnackBars();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(error.message ?? 'Authentication failed.'),
+          content: Text(error.toString()),
         ),
       );
       setState(() {
@@ -184,6 +199,28 @@ class _LoginScreenState extends State<LoginScreen> {
                             },
                           ),
                           const SizedBox(height: 12),
+                          if (!_isLogin)
+                            TextFormField(
+                              style: const TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold),
+                              decoration: const InputDecoration(
+                                labelText: 'Phone Number',
+                              ),
+                              keyboardType: TextInputType.number,
+                              autocorrect: false,
+                              validator: (value) {
+                                if (value == null || value.trim().length < 10) {
+                                  return 'Please enter a valid phone number.';
+                                }
+
+                                return null;
+                              },
+                              onSaved: (value) {
+                                _enteredPhone = value!;
+                              },
+                            ),
+                          const SizedBox(height: 12),
                           TextFormField(
                             style: const TextStyle(
                                 color: Colors.white,
@@ -192,7 +229,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 const InputDecoration(labelText: 'Password'),
                             obscureText: true,
                             validator: (value) {
-                              if (value == null || value.trim().length < 6) {
+                              if (value == null || value.trim().isEmpty) {
                                 return 'Password must be at least 6 characters long.';
                               }
                               return null;
