@@ -1,28 +1,37 @@
+import 'package:book_my_slot/providers/user_provider.dart';
+import 'package:book_my_slot/services/auth_services.dart';
+import 'package:book_my_slot/utils/color.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 //final _firebase = FirebaseAuth.instance;
 
-class ProfileScreen extends StatefulWidget {
+class ProfileScreen extends ConsumerStatefulWidget {
   static const routeName = '/login-screen';
   const ProfileScreen({Key? key}) : super(key: key);
 
   @override
-  State<ProfileScreen> createState() => _ProfileScreenState();
+  ConsumerState<ProfileScreen> createState() => _ProfileScreenState();
 }
 
-class _ProfileScreenState extends State<ProfileScreen> {
+class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   var _enteredEmail = '';
   var _enteredName = '';
-  var _imageUrl = '';
+  var _enteredPhone = '';
+  var _imageUrl = 'https://th.bing.com/th?id=OIP.Z306v3XdxhOaxBFGfHku7wHaHw&w=244&h=255&c=8&rs=1&qlt=90&o=6&dpr=1.3&pid=3.1&rm=2';
   TextEditingController nameController = TextEditingController();
   TextEditingController textController = TextEditingController();
+  TextEditingController phoneController = TextEditingController();
+  final AuthService authService = AuthService();
   final _form = GlobalKey<FormState>();
 
   @override
   void initState() {
-    getData();
+    authService.getUserData(context: context, ref: ref);
+    getData(ref);
     super.initState();
   }
 
@@ -94,19 +103,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
-  void getData() async {
-    final authenticatedUser = FirebaseAuth.instance.currentUser!;
-    var userData = await FirebaseFirestore.instance
-        .collection('users')
-        .doc(authenticatedUser.uid)
-        .get();
+  void getData(WidgetRef ref) async {
+    final user = ref.watch(userProvider);
 
     setState(() {
-      _enteredName = userData['name'];
+      _enteredName = user.name;
       nameController.text = _enteredName;
-      _enteredEmail = userData['email'];
+      _enteredEmail = user.email;
       textController.text = _enteredEmail;
-      _imageUrl = userData['image_url'];
+      _enteredPhone = user.phone;
+      phoneController.text = _enteredPhone;
     });
   }
 
@@ -114,13 +120,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void dispose() {
     nameController.dispose();
     textController.dispose();
+    phoneController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: MyColors.backgroundColor,
       appBar: AppBar(
+        backgroundColor: MyColors.appBarColor,
         title: const Text('Profile'),
         elevation: 0,
       ),
@@ -133,38 +142,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
               const SizedBox(
                 height: 15,
               ),
-              // Stack(
-              //   alignment: AlignmentDirectional.center,
-              //   children: [
-              //     Container(
-              //   decoration: BoxDecoration(
-              //       shape: BoxShape.rectangle,
-              //       borderRadius: BorderRadius.circular(15),
-              //       border: Border.all(
-              //             color: Colors.white,
-              //           ),
-              //       ),
-              //   margin: const EdgeInsets.only(
-              //     top: 20,
-              //     bottom: 20,
-              //     left: 20,
-              //     right: 20,
-              //   ),
-              //   height: 150,
-              //   width: 150,
-              //   clipBehavior: Clip.antiAliasWithSaveLayer,
-              //   //child: Image.network(_imageUrl),
-              // ),
-              // //Center(child: CircleAvatar(child: Image.network(_imageUrl)))
-              // ],
-              //),
               Container(
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   shape: BoxShape.rectangle,
-                  borderRadius: BorderRadius.circular(15),
-                  border: Border.all(
-                    color: Colors.white,
-                  ),
+                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                  
                 ),
                 margin: const EdgeInsets.only(
                   top: 20,
@@ -174,7 +156,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
                 height: 150,
                 width: 150,
-                clipBehavior: Clip.antiAliasWithSaveLayer,
+                clipBehavior: Clip.hardEdge,
                 child: Image.network(_imageUrl),
               ),
               Card(
@@ -191,7 +173,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           TextFormField(
                             controller: nameController,
                             style: const TextStyle(
-                                color: Colors.white,
                                 fontWeight: FontWeight.bold),
                             decoration: const InputDecoration(
                               labelText: 'Name',
@@ -214,7 +195,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           TextFormField(
                             controller: textController,
                             style: const TextStyle(
-                                color: Colors.white,
                                 fontWeight: FontWeight.bold),
                             decoration: const InputDecoration(
                               labelText: 'Email Address',
@@ -236,8 +216,29 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             },
                           ),
                           const SizedBox(height: 12),
+                          TextFormField(
+                            controller: phoneController,
+                            style: const TextStyle(
+                                fontWeight: FontWeight.bold),
+                            decoration: const InputDecoration(
+                              labelText: 'Phone',
+                            ),
+                            keyboardType: TextInputType.number,
+                            autocorrect: false,
+                            validator: (value) {
+                              if (value == null || value.trim().isEmpty) {
+                                return 'Please enter a valid phone number.';
+                              }
+
+                              return null;
+                            },
+                            onSaved: (value) {
+                              _enteredName = value!;
+                            },
+                          ),
+                          const SizedBox(height: 12),
                           ElevatedButton(
-                            onPressed: _submit,
+                            onPressed: (){},
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Theme.of(context)
                                   .colorScheme

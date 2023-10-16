@@ -1,4 +1,5 @@
 import 'package:book_my_slot/model/appointment.dart';
+import 'package:book_my_slot/utils/color.dart';
 import 'package:flutter/material.dart';
 
 class AppointmentDetail extends StatelessWidget {
@@ -16,13 +17,14 @@ class AppointmentDetail extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: MyColors.appBarColor,
         title: const Text('Details'),
       ),
-      //backgroundColor: Colors.black,
+      backgroundColor: MyColors.backgroundColor,
       body: SizedBox(
         height: double.infinity,
         child: Card(
-          color: const Color.fromARGB(247, 106, 227, 235),
+          color: Theme.of(context).primaryColorLight,//const Color.fromARGB(247, 106, 227, 235),
           margin: const EdgeInsets.all(10),
           child: SingleChildScrollView(
             padding: const EdgeInsets.all(6),
@@ -32,12 +34,12 @@ class AppointmentDetail extends StatelessWidget {
                 Text(
                   appointment.date,
                   style: Theme.of(context).textTheme.headlineSmall!.copyWith(
-                        color: const Color.fromARGB(255, 241, 232, 115),
+                        color: Colors.white,//const Color.fromARGB(255, 241, 232, 115),
                         fontWeight: FontWeight.bold,
                       ),
                 ),
                 const Divider(
-                  color: Color.fromARGB(255, 241, 232, 115),
+                  color: Colors.white,
                 ),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -45,8 +47,9 @@ class AppointmentDetail extends StatelessWidget {
                   children: [
                     Container(
                       decoration: const BoxDecoration(
-                        color: Colors.red,
+                        color: Color.fromARGB(255, 141, 215, 250),//Colors.red,
                         shape: BoxShape.circle,
+                        
                       ),
                       margin: const EdgeInsets.only(
                         top: 20,
@@ -62,14 +65,13 @@ class AppointmentDetail extends StatelessWidget {
                           style: Theme.of(context)
                               .textTheme
                               .headlineMedium!
-                              .copyWith(color: Colors.black),
+                              .copyWith(color: Colors.white),
                         ),
                       ),
                     ),
                     const Spacer(),
                     Container(
                       decoration: BoxDecoration(
-                        // color: Colors.lightBlue,
                         shape: BoxShape.rectangle,
                         borderRadius: BorderRadius.circular(10),
                         border: Border.all(
@@ -100,7 +102,7 @@ class AppointmentDetail extends StatelessWidget {
                   ],
                 ),
                 Card(
-                  color: Colors.white,
+                  color: MyColors.drawerColor,
                   margin: const EdgeInsets.all(10),
                   child: SingleChildScrollView(
                     padding: const EdgeInsets.all(6),

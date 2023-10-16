@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:book_my_slot/providers/user_provider.dart';
 import 'package:book_my_slot/services/auth_services.dart';
+import 'package:book_my_slot/utils/color.dart';
 import 'package:book_my_slot/utils/utils.dart';
 import 'package:book_my_slot/widgets/user_image_picker.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -105,8 +106,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color.fromARGB(255, 135, 206, 235),
       appBar: AppBar(
-        title: const Text('Login/SignUp'),
+        automaticallyImplyLeading: false,
+        backgroundColor:MyColors.appBarColor,
+        title: const Text('Login/SignUp',),
         elevation: 0,
       ),
       body: SingleChildScrollView(
@@ -115,28 +119,42 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const Text(
-                'You will need to Login or SignUp yourself.',
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 17,
-                    fontWeight: FontWeight.bold),
-              ),
+              // const Text(
+              //   'You will need to Login or SignUp yourself.',
+              //   style: TextStyle(
+              //       fontSize: 17,
+              //       fontWeight: FontWeight.bold),
+              // ),
               const SizedBox(
                 height: 15,
               ),
               Container(
                 decoration: const BoxDecoration(
-                    color: Colors.white, shape: BoxShape.circle),
+                    color: Color.fromARGB(255, 135, 206, 235),
+                    shape: BoxShape.rectangle,
+
+                    ),
                 margin: const EdgeInsets.only(
                   top: 20,
                   bottom: 20,
                   left: 20,
                   right: 20,
                 ),
-                child: Image.asset('assets/images/aiims.webp'),
+                height: 150,
+                
+                clipBehavior: Clip.antiAliasWithSaveLayer,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Image.asset('assets/images/Navicon1.png',
+                  fit: BoxFit.fill,
+                  
+                  ),
+                ),
                 // Image.network(
                 //     "https://www.milesweb.com/img-assets/client-logo/aiims.png"),
+              ),
+              const SizedBox(
+                height: 15,
               ),
               Card(
                 margin: const EdgeInsets.all(20),
@@ -157,7 +175,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           if (!_isLogin)
                             TextFormField(
                               style: const TextStyle(
-                                  color: Colors.white,
+                                  color: Colors.black,
                                   fontWeight: FontWeight.bold),
                               decoration: const InputDecoration(
                                 labelText: 'Name',
@@ -178,7 +196,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             ),
                           TextFormField(
                             style: const TextStyle(
-                                color: Colors.white,
+                                color: Colors.black,
                                 fontWeight: FontWeight.bold),
                             decoration: const InputDecoration(
                                 labelText: 'Email Address'),
@@ -202,7 +220,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           if (!_isLogin)
                             TextFormField(
                               style: const TextStyle(
-                                  color: Colors.white,
+                                  color: Colors.black,
                                   fontWeight: FontWeight.bold),
                               decoration: const InputDecoration(
                                 labelText: 'Phone Number',
@@ -223,7 +241,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           const SizedBox(height: 12),
                           TextFormField(
                             style: const TextStyle(
-                                color: Colors.white,
+                                color: Colors.black,
                                 fontWeight: FontWeight.bold),
                             decoration:
                                 const InputDecoration(labelText: 'Password'),

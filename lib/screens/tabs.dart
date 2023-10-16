@@ -1,11 +1,16 @@
+import 'package:book_my_slot/auth/login_screen.dart';
 import 'package:book_my_slot/model/appointment.dart';
 import 'package:book_my_slot/screens/profile_screen.dart';
+import 'package:book_my_slot/utils/color.dart';
 import 'package:book_my_slot/widgets/appointment_detail.dart';
 import 'package:book_my_slot/widgets/appointment_grid_item.dart';
 import 'package:book_my_slot/widgets/main_drawer.dart';
 import 'package:book_my_slot/widgets/new_appointments.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../utils/constants.dart';
 
 var appointments = [
     const Appointment(
@@ -70,6 +75,18 @@ class _TableScreenState extends State<TabsScreen> {
     }
   }
 
+  void logout() async{
+    var navigator = Navigator.of(context);
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString(Constants.token, '');
+    navigator.pushReplacement(
+        MaterialPageRoute(
+          builder: (ctx) => const LoginScreen(),
+        ),
+      );
+    
+  }
+
   @override
   Widget build(BuildContext context) {
     Widget activePage = GridView(
@@ -94,13 +111,13 @@ class _TableScreenState extends State<TabsScreen> {
     var activePageTitle = 'Appointments';
 
     return Scaffold(
+      backgroundColor: MyColors.backgroundColor,
       appBar: AppBar(
+        backgroundColor: MyColors.appBarColor,
         title: Text(activePageTitle),
         actions: [
           IconButton(
-              onPressed: () {
-                FirebaseAuth.instance.signOut();
-              },
+              onPressed: logout,
               icon: Icon(
                 Icons.exit_to_app,
                 color: Theme.of(context).colorScheme.primary,
@@ -110,10 +127,22 @@ class _TableScreenState extends State<TabsScreen> {
       drawer: MainDrawer(
         onSelectScreen: _setScreen,
       ),
-      body: activePage,
+      body: Stack(
+        children: [
+        Padding(
+          padding: const EdgeInsets.only(left: 50),
+          child: Center(
+            child: Image.asset(
+              'assets/images/Navicon1.png',
+              fit: BoxFit.fill,
+              ),
+          ),
+        ),
+        activePage,
+        ]),
       floatingActionButton: FloatingActionButton(
         onPressed: _openAddAppointmentOverlay,
-        backgroundColor: const Color.fromRGBO(0, 167, 131, 1),
+        backgroundColor: MyColors.appBarColor,
         child: const Icon(Icons.add),
       ),
     );

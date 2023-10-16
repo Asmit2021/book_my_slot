@@ -68,7 +68,7 @@ catch(err){
 }
 }
 
-const getUsers=async (req,res)=>{
+const getDoctor=async (req,res)=>{
     try{
         
         const users=await userModel.find({role: 'user'});
@@ -79,6 +79,18 @@ const getUsers=async (req,res)=>{
         res.status(500).send({success: false,message: `addDoctor ${error.message}`});
     }
 }
+
+const getUsers=async (req,res)=>{
+    try {
+        const user = await userModel.findById(req.user);
+        
+        res.status(200).json({...user, token: req.token});
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({message: `get user data ${error.message}`, success: false});
+    }
+}
+
 const profileController = async (req, res) => {
     try {
       const data=req.body.values;
@@ -86,7 +98,7 @@ const profileController = async (req, res) => {
       
       await userModel.findOneAndUpdate({_id: req.body._id},data);
       
-      res.status(200).send({message: 'Profile Updated Successfully', success: true});
+      res.status(200).json({message: 'Profile Updated Successfully', success: true});
     } catch (error) {
       res.status(400).json({
         message: `profileController ${error.message}`,
@@ -94,7 +106,37 @@ const profileController = async (req, res) => {
       });
     }
   };
+
+const tokenController=async (req,res)=>{
+    try {
+        const token=req.header("x-auth-token");
+        if(!token){
+            return res.json(false);
+        }
+        const verified=jwt.verify(token,process.env.JWT_SECRET);
+        if(!verified){
+            return res.json(false);
+        }
+        const user=await userModel.findById(verified.id);
+        if(!user){
+            return res.json(false);
+        }
+        return res.json(true);
+    } catch (e) {
+        res.status(500).send({message: `tokenController ${e.message}`,success: false});
+    }
+
+    
+};  
+
+const getUserData = async (req,res)=>{  
+    const user=await userModel.findOne(req.email);
+    if(!user){
+        return res.status(400).send({message: "User Not Found",success: false});
+    }
+    res.status(200).json(...user._doc);
+};
  
   
 
-module.exports={ loginController, registerController,authController,getUsers,profileController};
+module.exports={ loginController, registerController,authController,getUsers,profileController,tokenController,getDoctor,getUserData};

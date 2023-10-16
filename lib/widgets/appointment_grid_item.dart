@@ -37,7 +37,6 @@ class AppointmentGridItem extends StatelessWidget {
                   color: Theme.of(context).colorScheme.onBackground,
                   fontWeight: FontWeight.bold,
                   decoration: TextDecoration.underline,
-                  decorationColor: Theme.of(context).colorScheme.onBackground,
                 ),
           ),
         ),

@@ -1,5 +1,6 @@
 import 'package:book_my_slot/model/appointment.dart';
 import 'package:book_my_slot/screens/tabs.dart';
+import 'package:book_my_slot/utils/color.dart';
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 import 'package:intl/intl.dart';
@@ -46,15 +47,11 @@ class _NewAppointment extends State<NewAppointment> {
         context: context,
         builder: (ctx) => AlertDialog(
           title: const Text('Invalid input',
-          style: TextStyle(
-              color: Colors.white,
-            ),
+          
           ),
           content: const Text(
             'Please make sure a valid name, description , date and department was entered.',
-            style: TextStyle(
-              color: Colors.white,
-            ),
+            
           ),
           actions: [
             TextButton(
@@ -63,7 +60,6 @@ class _NewAppointment extends State<NewAppointment> {
               },
               child: const Text('Okay',
               style: TextStyle(
-              color: Colors.white,
             ),
               ),
             )
@@ -78,7 +74,7 @@ class _NewAppointment extends State<NewAppointment> {
       description: _descriptionController.text,
       time: formTime,
       date: DateFormat('dd-MM-yyyy').format(_selectedDate!),
-      department: Department.psychologist,
+      department: _selectedDepartment,
     );
 
     widget.onAddExpense(newAppointment);
@@ -99,7 +95,16 @@ class _NewAppointment extends State<NewAppointment> {
     return LayoutBuilder(builder: (ctx, constraints) {
       final width = constraints.maxHeight;
 
-      return SizedBox(
+      return Container(
+        decoration: BoxDecoration(
+                  color: Theme.of(context).primaryColorLight,
+                  shape: BoxShape.rectangle,
+                  borderRadius: BorderRadius.circular(15),
+                  border: Border.all(
+                    width: 3,
+                    color: Colors.black,
+                  ),
+                ),
         height: width,
         child: SingleChildScrollView(
           child: Padding(
@@ -113,7 +118,7 @@ class _NewAppointment extends State<NewAppointment> {
                 ),
                 TextField(
                   style: const TextStyle(
-                      color: Colors.white, fontWeight: FontWeight.bold),
+                      fontWeight: FontWeight.bold),
                   controller: _descriptionController,
                   decoration: const InputDecoration(
                     label: Text('Description'),
@@ -130,7 +135,7 @@ class _NewAppointment extends State<NewAppointment> {
                       _selectedDate == null
                           ? 'No date selected'
                           : DateFormat('dd-MM-yyyy').format(_selectedDate!),
-                      style: const TextStyle(fontSize: 20, color: Colors.white),
+                      style: const TextStyle(fontSize: 20,),
                     ),
                     const Spacer(),
                     IconButton(
@@ -146,13 +151,14 @@ class _NewAppointment extends State<NewAppointment> {
                 ),
                 DropdownButton(
                   value: _selectedDepartment,
+                  dropdownColor: const Color.fromARGB(255, 255, 145, 180),
                   items: Department.values
                       .map(
                         (department) => DropdownMenuItem(
                           value: department,
                           child: Text(
                             department.name.toUpperCase(),
-                            style: const TextStyle(color: Colors.white),
+                            
                           ),
                         ),
                       )
@@ -177,13 +183,17 @@ class _NewAppointment extends State<NewAppointment> {
                         },
                         child: const Text(
                           'Cancel',
-                          style: TextStyle(fontSize: 20),
+                          style: TextStyle(color: Color.fromARGB(255, 255, 145, 180),fontSize: 20,),
                         )),
                     ElevatedButton(
                       onPressed: _submitExpenseData,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.white
+                      ),
                       child: const Text(
                         'Save Appointment',
                         style: TextStyle(
+                          color: Color.fromARGB(255, 255, 145, 180),
                           fontSize: 20,
                         ),
                       ),

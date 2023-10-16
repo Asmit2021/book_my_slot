@@ -81,9 +81,75 @@ class AuthService {
           userHere.setUser(res.body);
           final user = ref.watch(userProvider);
           await prefs.setString(Constants.token, user.token);
+          await prefs.setString('email', user.email);
           navigator.pushAndRemoveUntil(
               MaterialPageRoute(builder: (contect) => const TabsScreen()),
               (route) => false);
+        },
+      );
+    } catch (e) {
+      showSnackBar(context, e.toString());
+    }
+  }
+
+  void getUserData({
+    required BuildContext context,
+    required WidgetRef ref,
+    }) async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? token = prefs.getString(Constants.token);
+      if (token == null) {
+        prefs.setString(Constants.token, '');
+      }
+
+      var tokenRes = await http.post(Uri.parse('${Constants.uri}/tokenIsValid'),
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+            Constants.token: token!,
+            
+          });
+
+      var response = jsonDecode(tokenRes.body);
+
+      if (response == true) {
+        http.Response userRes = await http
+            .get(Uri.parse('${Constants.uri}/'), headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          Constants.token: token,
+        });
+
+        ref.watch(userProvider.notifier).setUser(userRes.body);
+      }
+    } catch (e) {
+      showSnackBar(context, e.toString());
+    }
+  }
+
+  void getUser({
+    required BuildContext context,
+    required WidgetRef ref,
+  }) async {
+    try {
+      final userHere = ref.watch(userProvider.notifier);
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? email = prefs.getString('email');
+
+
+      http.Response res = await http.post(
+        Uri.parse(
+            '${Constants.uri}/user'), //change this to your local ip address
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode({'email': email}),
+      );
+      // ignore: use_build_context_synchronously
+      httpErrorHandle(
+        response: res,
+        context: context,
+        onSucess: () {
+          userHere.setUser(res.body);
         },
       );
     } catch (e) {

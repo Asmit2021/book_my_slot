@@ -1,3 +1,4 @@
+import 'package:book_my_slot/utils/color.dart';
 import 'package:flutter/material.dart';
 
 class MainDrawer extends StatelessWidget {
@@ -11,6 +12,8 @@ class MainDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Drawer(
+      elevation: 2,
+      backgroundColor: MyColors.drawerColor,
       child: Column(
         children: [
           DrawerHeader(
@@ -18,10 +21,8 @@ class MainDrawer extends StatelessWidget {
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [
-                  Theme.of(context).colorScheme.primaryContainer,
-                  Theme.of(context)
-                      .colorScheme
-                      .primaryContainer
+                  MyColors.appBarColor,
+                  MyColors.appBarColor
                       .withOpacity(0.8),
                 ],
                 begin: Alignment.topLeft,
@@ -30,10 +31,10 @@ class MainDrawer extends StatelessWidget {
             ),
             child: Row(
               children: [
-                Icon(
+                const Icon(
                   Icons.local_hospital_rounded,
                   size: 48,
-                  color: Theme.of(context).colorScheme.primary,
+                  color: Colors.red,
                 ),
                 const SizedBox(
                   width: 18,
@@ -41,13 +42,15 @@ class MainDrawer extends StatelessWidget {
                 Text(
                   'Dashboard',
                   style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                        color: Theme.of(context).colorScheme.primary,
+                        color: Colors.white,
                       ),
                 )
               ],
             ),
           ),
           ListTile(
+            focusColor: Colors.white,
+            hoverColor: Colors.white,
             leading: Icon(
               Icons.local_hospital,
               size: 26,
@@ -65,6 +68,7 @@ class MainDrawer extends StatelessWidget {
             },
           ),
           ListTile(
+            hoverColor: Colors.white,
             leading: Icon(
               Icons.circle,
               size: 26,

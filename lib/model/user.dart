@@ -1,8 +1,8 @@
 import 'dart:convert';
 
 enum Gender{
-  male,
-  female,
+  Male,
+  Female,
   other,
 }
 
