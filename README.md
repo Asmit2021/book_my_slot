@@ -16,4 +16,5 @@ BookMySlot is not just a convenience for patients but also a valuable tool for h
 <a href="https://firebase.google.com/" target="_blank" rel="noreferrer"> <img src="https://www.vectorlogo.zone/logos/firebase/firebase-icon.svg" alt="firebase" width="40" height="40"/> </a>
 
 ## Screenshots
-![ezgif com-resize](https://github.com/Asmit2021/book_my_slot/assets/113445568/dedb147f-c52a-49cb-9f33-e22e27539e4c)
+![ezgif com-add-text](https://github.com/Asmit2021/book_my_slot/assets/113445568/8818c045-eaef-4490-91cc-925f8938f26a)
+
