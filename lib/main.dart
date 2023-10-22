@@ -15,7 +15,7 @@ final theme = ThemeData(
   useMaterial3: true,
   colorScheme: ColorScheme.fromSeed(
     brightness: Brightness.light,
-    seedColor: MyColors.appBarColor,//const Color.fromARGB(255, 66, 33, 99),
+    seedColor: MyColors.appBarColor, //const Color.fromARGB(255, 66, 33, 99),
   ),
   textTheme: GoogleFonts.latoTextTheme(),
 );
@@ -50,9 +50,7 @@ class _AppState extends ConsumerState<App> {
   Widget build(BuildContext context) {
     final user = ref.watch(userProvider);
     return MaterialApp(
-      theme: theme,
-      home: user.token.isNotEmpty? const TabsScreen()  :const LoginScreen()
-          
-    );
+        theme: theme,
+        home: user.token.isNotEmpty ? const TabsScreen() : const LoginScreen());
   }
 }

@@ -84,7 +84,7 @@ const getUsers=async (req,res)=>{
     try {
         const user = await userModel.findById(req.user);
         
-        res.status(200).json({...user, token: req.token});
+        res.status(200).json({...user._doc, token: req.token});
     } catch (error) {
         console.log(error);
         res.status(500).send({message: `get user data ${error.message}`, success: false});
@@ -129,14 +129,5 @@ const tokenController=async (req,res)=>{
     
 };  
 
-const getUserData = async (req,res)=>{  
-    const user=await userModel.findOne(req.email);
-    if(!user){
-        return res.status(400).send({message: "User Not Found",success: false});
-    }
-    res.status(200).json(...user._doc);
-};
  
-  
-
-module.exports={ loginController, registerController,authController,getUsers,profileController,tokenController,getDoctor,getUserData};
+module.exports={ loginController, registerController,authController,getUsers,profileController,tokenController,getDoctor};

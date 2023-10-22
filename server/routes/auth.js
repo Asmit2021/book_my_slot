@@ -12,8 +12,6 @@ router.post('/api/signin', userController.loginController);
 
 router.post('/tokenIsValid', userController.tokenController);
 
-//router.post('/user', userController.getUserData);
-
 //get user data
 router.get('/',auth,  userController.getUsers);
 

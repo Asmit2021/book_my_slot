@@ -145,7 +145,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 clipBehavior: Clip.antiAliasWithSaveLayer,
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Image.asset('assets/images/Navicon1.png',
+                  child: Image.asset('assets/images/Navicon12.png',
                   fit: BoxFit.fill,
                   
                   ),

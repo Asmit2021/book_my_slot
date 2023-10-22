@@ -81,6 +81,8 @@ flutter:
       - assets\images\aiims.webp
       - assets\images\Navicon.png
       - assets\images\Navicon1.png
+      - assets\images\Navicon11.png
+      - assets\images\Navicon12.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

@@ -6,7 +6,7 @@ import 'package:book_my_slot/widgets/appointment_detail.dart';
 import 'package:book_my_slot/widgets/appointment_grid_item.dart';
 import 'package:book_my_slot/widgets/main_drawer.dart';
 import 'package:book_my_slot/widgets/new_appointments.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

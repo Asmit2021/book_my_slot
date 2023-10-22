@@ -3,9 +3,9 @@ import 'package:book_my_slot/services/auth_services.dart';
 import 'package:book_my_slot/utils/color.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 //final _firebase = FirebaseAuth.instance;
 
@@ -21,19 +21,14 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   var _enteredEmail = '';
   var _enteredName = '';
   var _enteredPhone = '';
-  var _imageUrl = 'https://th.bing.com/th?id=OIP.Z306v3XdxhOaxBFGfHku7wHaHw&w=244&h=255&c=8&rs=1&qlt=90&o=6&dpr=1.3&pid=3.1&rm=2';
+  var _imageUrl =
+      'https://th.bing.com/th?id=OIP.Z306v3XdxhOaxBFGfHku7wHaHw&w=244&h=255&c=8&rs=1&qlt=90&o=6&dpr=1.3&pid=3.1&rm=2';
   TextEditingController nameController = TextEditingController();
   TextEditingController textController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
   final AuthService authService = AuthService();
   final _form = GlobalKey<FormState>();
 
-  @override
-  void initState() {
-    authService.getUserData(context: context, ref: ref);
-    getData(ref);
-    super.initState();
-  }
 
   void _submit() async {
     final isValid = _form.currentState!.validate();
@@ -103,8 +98,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     }
   }
 
-  void getData(WidgetRef ref) async {
-    final user = ref.watch(userProvider);
+  void getData(WidgetRef ref){
+    final user = ref.read(userProvider);
 
     setState(() {
       _enteredName = user.name;
@@ -114,6 +109,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
       _enteredPhone = user.phone;
       phoneController.text = _enteredPhone;
     });
+    kDebugMode? print(user) : null;
   }
 
   @override
@@ -126,6 +122,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    getData(ref);
     return Scaffold(
       backgroundColor: MyColors.backgroundColor,
       appBar: AppBar(
@@ -146,7 +143,6 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                 decoration: const BoxDecoration(
                   shape: BoxShape.rectangle,
                   borderRadius: BorderRadius.all(Radius.circular(10)),
-                  
                 ),
                 margin: const EdgeInsets.only(
                   top: 20,
@@ -172,8 +168,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                           const SizedBox(height: 12),
                           TextFormField(
                             controller: nameController,
-                            style: const TextStyle(
-                                fontWeight: FontWeight.bold),
+                            style: const TextStyle(fontWeight: FontWeight.bold),
                             decoration: const InputDecoration(
                               labelText: 'Name',
                             ),
@@ -194,8 +189,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                           const SizedBox(height: 12),
                           TextFormField(
                             controller: textController,
-                            style: const TextStyle(
-                                fontWeight: FontWeight.bold),
+                            style: const TextStyle(fontWeight: FontWeight.bold),
                             decoration: const InputDecoration(
                               labelText: 'Email Address',
                             ),
@@ -218,8 +212,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                           const SizedBox(height: 12),
                           TextFormField(
                             controller: phoneController,
-                            style: const TextStyle(
-                                fontWeight: FontWeight.bold),
+                            style: const TextStyle(fontWeight: FontWeight.bold),
                             decoration: const InputDecoration(
                               labelText: 'Phone',
                             ),
@@ -238,7 +231,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                           ),
                           const SizedBox(height: 12),
                           ElevatedButton(
-                            onPressed: (){},
+                            onPressed: () {},
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Theme.of(context)
                                   .colorScheme

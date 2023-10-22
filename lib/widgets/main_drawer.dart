@@ -1,7 +1,9 @@
+import 'package:book_my_slot/providers/user_provider.dart';
 import 'package:book_my_slot/utils/color.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class MainDrawer extends StatelessWidget {
+class MainDrawer extends ConsumerStatefulWidget {
   const MainDrawer({
     super.key,
     required this.onSelectScreen,
@@ -10,7 +12,14 @@ class MainDrawer extends StatelessWidget {
   final void Function(String identifier) onSelectScreen;
 
   @override
+  ConsumerState<MainDrawer> createState() => _MainDrawerState();
+}
+
+class _MainDrawerState extends ConsumerState<MainDrawer> {
+
+  @override
   Widget build(BuildContext context) {
+    final user = ref.read(userProvider);
     return Drawer(
       elevation: 2,
       backgroundColor: MyColors.drawerColor,
@@ -52,7 +61,7 @@ class MainDrawer extends StatelessWidget {
             focusColor: Colors.white,
             hoverColor: Colors.white,
             leading: Icon(
-              Icons.local_hospital,
+              Icons.add_shopping_cart_rounded,
               size: 26,
               color: Theme.of(context).colorScheme.onBackground,
             ),
@@ -64,13 +73,70 @@ class MainDrawer extends StatelessWidget {
                   ),
             ),
             onTap: () {
-              onSelectScreen('appointments');
+              widget.onSelectScreen('appointments');
+            },
+          ),
+          if(user.role == 'admin')
+          ListTile(
+            hoverColor: Colors.white,
+            leading: Icon(
+              Icons.supervised_user_circle_rounded,
+              size: 26,
+              color: Theme.of(context).colorScheme.onBackground,
+            ),
+            title: Text(
+              'Doctors',
+              style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                    color: Theme.of(context).colorScheme.onBackground,
+                    fontSize: 24,
+                  ),
+            ),
+            onTap: () {
+              widget.onSelectScreen('doctors');
+            },
+          ),
+          if(user.role == 'admin')
+          ListTile(
+            hoverColor: Colors.white,
+            leading: Icon(
+              Icons.supervised_user_circle_outlined,
+              size: 26,
+              color: Theme.of(context).colorScheme.onBackground,
+            ),
+            title: Text(
+              'Users',
+              style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                    color: Theme.of(context).colorScheme.onBackground,
+                    fontSize: 24,
+                  ),
+            ),
+            onTap: () {
+              widget.onSelectScreen('users');
+            },
+          ),
+          if(user.role == 'admin')
+          ListTile(
+            hoverColor: Colors.white,
+            leading: Icon(
+              Icons.add_circle_rounded,
+              size: 26,
+              color: Theme.of(context).colorScheme.onBackground,
+            ),
+            title: Text(
+              'Add Doctors',
+              style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                    color: Theme.of(context).colorScheme.onBackground,
+                    fontSize: 24,
+                  ),
+            ),
+            onTap: () {
+              widget.onSelectScreen('addDoctors');
             },
           ),
           ListTile(
             hoverColor: Colors.white,
             leading: Icon(
-              Icons.circle,
+              Icons.data_usage_rounded,
               size: 26,
               color: Theme.of(context).colorScheme.onBackground,
             ),
@@ -82,7 +148,7 @@ class MainDrawer extends StatelessWidget {
                   ),
             ),
             onTap: () {
-              onSelectScreen('profile');
+              widget.onSelectScreen('profile');
             },
           ),
           

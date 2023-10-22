@@ -95,10 +95,11 @@ class AuthService {
   void getUserData({
     required BuildContext context,
     required WidgetRef ref,
-    }) async {
+  }) async {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String? token = prefs.getString(Constants.token);
+      String? email = prefs.getString('email');
       if (token == null) {
         prefs.setString(Constants.token, '');
       }
@@ -107,7 +108,6 @@ class AuthService {
           headers: <String, String>{
             'Content-Type': 'application/json; charset=UTF-8',
             Constants.token: token!,
-            
           });
 
       var response = jsonDecode(tokenRes.body);
@@ -116,7 +116,9 @@ class AuthService {
         http.Response userRes = await http
             .get(Uri.parse('${Constants.uri}/'), headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
+          'email': email!,
           Constants.token: token,
+          
         });
 
         ref.watch(userProvider.notifier).setUser(userRes.body);
@@ -135,15 +137,15 @@ class AuthService {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String? email = prefs.getString('email');
 
-
-      http.Response res = await http.post(
+      http.Response res = await http.get(
         Uri.parse(
             '${Constants.uri}/user'), //change this to your local ip address
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
+          'email': email!
         },
-        body: jsonEncode({'email': email}),
       );
+      userHere.setUser(res.body);
       // ignore: use_build_context_synchronously
       httpErrorHandle(
         response: res,
