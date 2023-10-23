@@ -1,6 +1,7 @@
 import 'package:book_my_slot/auth/login_screen.dart';
 import 'package:book_my_slot/model/appointment.dart';
 import 'package:book_my_slot/model/doctor.dart';
+import 'package:book_my_slot/screens/add_doctor_screen.dart';
 import 'package:book_my_slot/screens/doctor_screen.dart';
 import 'package:book_my_slot/screens/profile_screen.dart';
 import 'package:book_my_slot/utils/color.dart';
@@ -40,7 +41,8 @@ var doctors = [
     present: true,
     inline: 0,
     fees: 700,
-    imageUrl: 'https://th.bing.com/th/id/OIP.6RcJ1Aw8BsyUTt4jjbYeMAAAAA?w=169&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7',
+    imageUrl:
+        'https://th.bing.com/th/id/OIP.6RcJ1Aw8BsyUTt4jjbYeMAAAAA?w=169&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7',
   ),
   const Doctor(
     email: 'tashu.namn@gmail.com',
@@ -51,7 +53,8 @@ var doctors = [
     present: false,
     inline: 0,
     fees: 500,
-    imageUrl: 'https://th.bing.com/th/id/OIP.VE86YCGNvuR-se5r9JevCwHCHC?w=160&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7',
+    imageUrl:
+        'https://th.bing.com/th/id/OIP.VE86YCGNvuR-se5r9JevCwHCHC?w=160&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7',
   ),
   const Doctor(
     email: 'harsh@gmail.com',
@@ -62,7 +65,8 @@ var doctors = [
     present: false,
     inline: 0,
     fees: 500,
-    imageUrl: 'https://th.bing.com/th/id/OIP.VE86YCGNvuR-se5r9JevCwHCHC?w=160&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7',
+    imageUrl:
+        'https://th.bing.com/th/id/OIP.VE86YCGNvuR-se5r9JevCwHCHC?w=160&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7',
   ),
   const Doctor(
     email: 'sagar@gmail.com',
@@ -73,7 +77,8 @@ var doctors = [
     present: true,
     inline: 0,
     fees: 700,
-    imageUrl: 'https://th.bing.com/th/id/OIP.6RcJ1Aw8BsyUTt4jjbYeMAAAAA?w=169&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7',
+    imageUrl:
+        'https://th.bing.com/th/id/OIP.6RcJ1Aw8BsyUTt4jjbYeMAAAAA?w=169&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7',
   ),
   const Doctor(
     email: 'sumit@gmail.com',
@@ -84,7 +89,8 @@ var doctors = [
     present: false,
     inline: 0,
     fees: 500,
-    imageUrl: 'https://th.bing.com/th/id/OIP.VE86YCGNvuR-se5r9JevCwHCHC?w=160&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7',
+    imageUrl:
+        'https://th.bing.com/th/id/OIP.VE86YCGNvuR-se5r9JevCwHCHC?w=160&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7',
   ),
   const Doctor(
     email: 'emmmet@gmail.com',
@@ -95,7 +101,8 @@ var doctors = [
     present: true,
     inline: 0,
     fees: 700,
-    imageUrl: 'https://th.bing.com/th/id/OIP.6RcJ1Aw8BsyUTt4jjbYeMAAAAA?w=169&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7',
+    imageUrl:
+        'https://th.bing.com/th/id/OIP.6RcJ1Aw8BsyUTt4jjbYeMAAAAA?w=169&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7',
   ),
 ];
 
@@ -139,13 +146,16 @@ class _TableScreenState extends State<TabsScreen> {
           builder: (ctx) => const ProfileScreen(),
         ),
       );
-    }
-    else if(identifier == 'doctors'){
+    } else if (identifier == 'doctors') {
       Navigator.of(context).push(
         MaterialPageRoute(
           builder: (ctx) => DoctorsScreen(doctors: doctors),
         ),
       );
+    } else if (identifier == 'addDoctor') {
+      Navigator.of(context).push(MaterialPageRoute(
+        builder: (ctx) => const AddDoctorScreen(editing: false),
+      ));
     }
   }
 

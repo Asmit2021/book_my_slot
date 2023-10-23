@@ -23,136 +23,138 @@ class _MainDrawerState extends ConsumerState<MainDrawer> {
     return Drawer(
       elevation: 2,
       backgroundColor: MyColors.drawerColor,
-      child: Column(
-        children: [
-          DrawerHeader(
-            padding: const EdgeInsets.all(20),
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  MyColors.appBarColor,
-                  MyColors.appBarColor
-                      .withOpacity(0.8),
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            DrawerHeader(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    MyColors.appBarColor,
+                    MyColors.appBarColor
+                        .withOpacity(0.8),
+                  ],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomLeft,
+                ),
+              ),
+              child: Row(
+                children: [
+                  const Icon(
+                    Icons.local_hospital_rounded,
+                    size: 48,
+                    color: Colors.red,
+                  ),
+                  const SizedBox(
+                    width: 18,
+                  ),
+                  Text(
+                    'Dashboard',
+                    style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                          color: Colors.white,
+                        ),
+                  )
                 ],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomLeft,
               ),
             ),
-            child: Row(
-              children: [
-                const Icon(
-                  Icons.local_hospital_rounded,
-                  size: 48,
-                  color: Colors.red,
-                ),
-                const SizedBox(
-                  width: 18,
-                ),
-                Text(
-                  'Dashboard',
-                  style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                        color: Colors.white,
-                      ),
-                )
-              ],
+            ListTile(
+              focusColor: Colors.white,
+              hoverColor: Colors.white,
+              leading: Icon(
+                Icons.add_shopping_cart_rounded,
+                size: 26,
+                color: Theme.of(context).colorScheme.onBackground,
+              ),
+              title: Text(
+                'Appointments',
+                style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                      color: Theme.of(context).colorScheme.onBackground,
+                      fontSize: 24,
+                    ),
+              ),
+              onTap: () {
+                widget.onSelectScreen('appointments');
+              },
             ),
-          ),
-          ListTile(
-            focusColor: Colors.white,
-            hoverColor: Colors.white,
-            leading: Icon(
-              Icons.add_shopping_cart_rounded,
-              size: 26,
-              color: Theme.of(context).colorScheme.onBackground,
+            if(user.role == 'admin')
+            ListTile(
+              hoverColor: Colors.white,
+              leading: Icon(
+                Icons.supervised_user_circle_rounded,
+                size: 26,
+                color: Theme.of(context).colorScheme.onBackground,
+              ),
+              title: Text(
+                'Doctors',
+                style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                      color: Theme.of(context).colorScheme.onBackground,
+                      fontSize: 24,
+                    ),
+              ),
+              onTap: () {
+                widget.onSelectScreen('doctors');
+              },
             ),
-            title: Text(
-              'Appointments',
-              style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                    color: Theme.of(context).colorScheme.onBackground,
-                    fontSize: 24,
-                  ),
+            if(user.role == 'admin')
+            ListTile(
+              hoverColor: Colors.white,
+              leading: Icon(
+                Icons.supervised_user_circle_outlined,
+                size: 26,
+                color: Theme.of(context).colorScheme.onBackground,
+              ),
+              title: Text(
+                'Users',
+                style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                      color: Theme.of(context).colorScheme.onBackground,
+                      fontSize: 24,
+                    ),
+              ),
+              onTap: () {
+                widget.onSelectScreen('users');
+              },
             ),
-            onTap: () {
-              widget.onSelectScreen('appointments');
-            },
-          ),
-          if(user.role == 'admin')
-          ListTile(
-            hoverColor: Colors.white,
-            leading: Icon(
-              Icons.supervised_user_circle_rounded,
-              size: 26,
-              color: Theme.of(context).colorScheme.onBackground,
+            if(user.role == 'admin')
+            ListTile(
+              hoverColor: Colors.white,
+              leading: Icon(
+                Icons.add_circle_rounded,
+                size: 26,
+                color: Theme.of(context).colorScheme.onBackground,
+              ),
+              title: Text(
+                'Add Doctor',
+                style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                      color: Theme.of(context).colorScheme.onBackground,
+                      fontSize: 24,
+                    ),
+              ),
+              onTap: () {
+                widget.onSelectScreen('addDoctor');
+              },
             ),
-            title: Text(
-              'Doctors',
-              style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                    color: Theme.of(context).colorScheme.onBackground,
-                    fontSize: 24,
-                  ),
+            ListTile(
+              hoverColor: Colors.white,
+              leading: Icon(
+                Icons.data_usage_rounded,
+                size: 26,
+                color: Theme.of(context).colorScheme.onBackground,
+              ),
+              title: Text(
+                'Profile',
+                style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                      color: Theme.of(context).colorScheme.onBackground,
+                      fontSize: 24,
+                    ),
+              ),
+              onTap: () {
+                widget.onSelectScreen('profile');
+              },
             ),
-            onTap: () {
-              widget.onSelectScreen('doctors');
-            },
-          ),
-          if(user.role == 'admin')
-          ListTile(
-            hoverColor: Colors.white,
-            leading: Icon(
-              Icons.supervised_user_circle_outlined,
-              size: 26,
-              color: Theme.of(context).colorScheme.onBackground,
-            ),
-            title: Text(
-              'Users',
-              style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                    color: Theme.of(context).colorScheme.onBackground,
-                    fontSize: 24,
-                  ),
-            ),
-            onTap: () {
-              widget.onSelectScreen('users');
-            },
-          ),
-          if(user.role == 'admin')
-          ListTile(
-            hoverColor: Colors.white,
-            leading: Icon(
-              Icons.add_circle_rounded,
-              size: 26,
-              color: Theme.of(context).colorScheme.onBackground,
-            ),
-            title: Text(
-              'Add Doctors',
-              style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                    color: Theme.of(context).colorScheme.onBackground,
-                    fontSize: 24,
-                  ),
-            ),
-            onTap: () {
-              widget.onSelectScreen('addDoctors');
-            },
-          ),
-          ListTile(
-            hoverColor: Colors.white,
-            leading: Icon(
-              Icons.data_usage_rounded,
-              size: 26,
-              color: Theme.of(context).colorScheme.onBackground,
-            ),
-            title: Text(
-              'Profile',
-              style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                    color: Theme.of(context).colorScheme.onBackground,
-                    fontSize: 24,
-                  ),
-            ),
-            onTap: () {
-              widget.onSelectScreen('profile');
-            },
-          ),
-          
-        ],
+            
+          ],
+        ),
       ),
     );
   }

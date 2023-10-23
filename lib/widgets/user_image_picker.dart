@@ -10,6 +10,7 @@ class UserImagePicker extends StatefulWidget {
   });
 
   final void Function(File pickedImage) onPickImage;
+  final bool auto = false;
 
   @override
   State<UserImagePicker> createState() {

@@ -1,4 +1,5 @@
 import 'package:book_my_slot/model/doctor.dart';
+import 'package:book_my_slot/screens/add_doctor_screen.dart';
 import 'package:book_my_slot/utils/color.dart';
 import 'package:book_my_slot/widgets/doctor_item.dart';
 import 'package:flutter/material.dart';
@@ -16,13 +17,13 @@ class DoctorsScreen extends StatelessWidget {
   final List<Doctor> doctors;
 
 
-  // void _selectMeal(BuildContext context, Doctor meal) {
-  //   Navigator.of(context).push(
-  //     MaterialPageRoute(
-  //       builder: ((ctx) => MealDetail(meal: meal,)),
-  //     ),
-  //   ); //Navigator.push(context, route)
-  // }
+  void _selectDoctor(BuildContext context, Doctor doctor) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: ((ctx) => AddDoctorScreen(editing: true, doctor: doctor,)),
+      ),
+    ); //Navigator.push(context, route)
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +53,9 @@ class DoctorsScreen extends StatelessWidget {
     if (doctors.isNotEmpty) {
       content = ListView.builder(
       itemCount: doctors.length,
-      itemBuilder: (ctx, index) => DoctorItem(doctor: doctors[index], onSelectDoctor: (){}),
+      itemBuilder: (ctx, index) => DoctorItem(doctor: doctors[index], onSelectDoctor: (){
+        _selectDoctor(context, doctors[index]);
+      }),
     );
     }
 
