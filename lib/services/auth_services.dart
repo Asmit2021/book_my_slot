@@ -14,6 +14,7 @@ import '../providers/user_provider.dart';
 class AuthService {
   void signUpUser({
     required BuildContext context,
+    required String id,
     required String name,
     required String email,
     required String password,
@@ -118,7 +119,6 @@ class AuthService {
           'Content-Type': 'application/json; charset=UTF-8',
           'email': email!,
           Constants.token: token,
-          
         });
 
         ref.watch(userProvider.notifier).setUser(userRes.body);
@@ -157,5 +157,29 @@ class AuthService {
     } catch (e) {
       showSnackBar(context, e.toString());
     }
+  }
+
+  Future<void> updateUser({
+    required BuildContext context,
+    required WidgetRef ref,
+  }) async {
+    var user = ref.watch(userProvider);
+
+    http.Response res =
+        await http.post(Uri.parse('${Constants.uri}/api/updateProfile'),
+            headers: <String, String>{
+              'Content-Type': 'application/json; charset=UTF-8',
+            },
+            body: user.toJson());
+    var response = jsonDecode(res.body);
+    // ignore: use_build_context_synchronously
+    httpErrorHandle(
+      response: res,
+      context: context,
+      onSucess: () {
+        showSnackBar(context, 'Updated');
+      },
+    );
+    //showSnackBar(context, response == true ? 'Updated' : 'Failed');
   }
 }

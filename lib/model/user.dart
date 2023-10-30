@@ -1,12 +1,12 @@
 import 'dart:convert';
 
-enum Gender{
+enum Gender {
   Male,
   Female,
   other,
 }
 
-enum Role{
+enum Role {
   doctor,
   user,
   admin,
@@ -31,7 +31,7 @@ class User {
     required this.password,
     required this.token,
   });
-  
+
 
   Map<String, dynamic> toMap() {
     return {

@@ -1,5 +1,5 @@
 const doctorModel=require('../models/doctorModel');
-const userModel=require('../models/userModel');
+const userModel=require('../models/user');
 const addDoctor=async (req,res)=>{
     try{
         let data=req.body;

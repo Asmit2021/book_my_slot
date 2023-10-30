@@ -1,9 +1,13 @@
+import 'dart:developer';
+
 import 'package:book_my_slot/auth/login_screen.dart';
 import 'package:book_my_slot/model/appointment.dart';
 import 'package:book_my_slot/model/doctor.dart';
+import 'package:book_my_slot/providers/appointment_provider.dart';
 import 'package:book_my_slot/screens/add_doctor_screen.dart';
 import 'package:book_my_slot/screens/doctor_screen.dart';
 import 'package:book_my_slot/screens/profile_screen.dart';
+import 'package:book_my_slot/services/appointment_service.dart';
 import 'package:book_my_slot/utils/color.dart';
 import 'package:book_my_slot/widgets/appointment_detail.dart';
 import 'package:book_my_slot/widgets/appointment_grid_item.dart';
@@ -11,26 +15,12 @@ import 'package:book_my_slot/widgets/main_drawer.dart';
 import 'package:book_my_slot/widgets/new_appointments.dart';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../providers/user_provider.dart';
 import '../utils/constants.dart';
 
-var appointments = [
-  const Appointment(
-    id: '1',
-    time: "12:30",
-    department: Department.cardiologist,
-    date: '16/09/2023',
-    description: 'Sick from fever',
-  ),
-  const Appointment(
-    id: '2',
-    time: "09:00",
-    department: Department.dentist,
-    date: '17/09/2023',
-    description: 'Sick from cough',
-  ),
-];
 var doctors = [
   const Doctor(
     email: 'asmit2002@gmail.com',
@@ -66,7 +56,7 @@ var doctors = [
     inline: 0,
     fees: 500,
     imageUrl:
-        'https://th.bing.com/th/id/OIP.VE86YCGNvuR-se5r9JevCwHCHC?w=160&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7',
+        'https://th.bing.com/th/id/OIP.jccpKWDR2AhPu-E1BjtEwAHaEK?w=313&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7',
   ),
   const Doctor(
     email: 'sagar@gmail.com',
@@ -78,7 +68,7 @@ var doctors = [
     inline: 0,
     fees: 700,
     imageUrl:
-        'https://th.bing.com/th/id/OIP.6RcJ1Aw8BsyUTt4jjbYeMAAAAA?w=169&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7',
+        'https://safartibbi.com/wp-content/uploads/2023/02/dr.vipul_.jpg',
   ),
   const Doctor(
     email: 'sumit@gmail.com',
@@ -90,7 +80,7 @@ var doctors = [
     inline: 0,
     fees: 500,
     imageUrl:
-        'https://th.bing.com/th/id/OIP.VE86YCGNvuR-se5r9JevCwHCHC?w=160&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7',
+        'https://th.bing.com/th/id/OIP.tV6YG37pRoKTcV5-KC8XYwHaKo?w=123&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7',
   ),
   const Doctor(
     email: 'emmmet@gmail.com',
@@ -106,16 +96,19 @@ var doctors = [
   ),
 ];
 
-class TabsScreen extends StatefulWidget {
+class TabsScreen extends ConsumerStatefulWidget {
   const TabsScreen({super.key});
 
   @override
-  State<TabsScreen> createState() {
+  ConsumerState<TabsScreen> createState() {
     return _TableScreenState();
   }
 }
 
-class _TableScreenState extends State<TabsScreen> {
+class _TableScreenState extends ConsumerState<TabsScreen> {
+  final AppointmentService appointmentService = AppointmentService();
+  List<Appointment> appointments = [];
+
   void _openAddAppointmentOverlay() {
     showModalBottomSheet(
         useSafeArea: true,
@@ -124,10 +117,9 @@ class _TableScreenState extends State<TabsScreen> {
         builder: (context) => NewAppointment(onAddExpense: addAppointment));
   }
 
-  void addAppointment(Appointment appointment) {
-    setState(() {
-      appointments.add(appointment);
-    });
+
+  void addAppointment() {
+    setState(() {});
   }
 
   void onSelectAppointment(Appointment appointment) {
@@ -170,8 +162,28 @@ class _TableScreenState extends State<TabsScreen> {
     );
   }
 
+  void fetchAppointment(
+    WidgetRef ref,
+    BuildContext context,
+  ) async {
+    final user = ref.read(userProvider);
+    await appointmentService.getAppointments(
+        user: user, ref: ref, context: context);
+    var temp = appointments.length;
+    appointments = ref.watch(appointmentProvider);
+    log( appointments.length.toString());
+    if (temp < appointments.length) {
+      setState(() {
+        temp = appointments.length;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    fetchAppointment(ref, context);
+    final user = ref.read(userProvider);
+
     Widget activePage = GridView(
       padding: const EdgeInsets.all(24),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -222,11 +234,13 @@ class _TableScreenState extends State<TabsScreen> {
         ),
         activePage,
       ]),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _openAddAppointmentOverlay,
-        backgroundColor: MyColors.appBarColor,
-        child: const Icon(Icons.add),
-      ),
+      floatingActionButton: user.role == 'user'
+          ? FloatingActionButton(
+              onPressed: _openAddAppointmentOverlay,
+              backgroundColor: MyColors.appBarColor,
+              child: const Icon(Icons.add),
+            )
+          : null,
     );
   }
 }

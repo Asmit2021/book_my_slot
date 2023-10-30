@@ -1,6 +1,7 @@
 import 'package:book_my_slot/model/appointment.dart';
 import 'package:book_my_slot/utils/color.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class AppointmentDetail extends StatelessWidget {
   const AppointmentDetail({
@@ -13,7 +14,9 @@ class AppointmentDetail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var department =
-        appointment.department.toString().split('.')[1].toUpperCase();
+        appointment.speciality.toString().split('.')[1].toUpperCase();
+    var slot = appointment.slot.trim().isNotEmpty?(appointment.slot.split(',')[1]).split(':00 ')[0]:'XX:XX';
+    var doctorName = appointment.doctorName.trim().isNotEmpty?appointment.doctorName:'To be assigned';
 
     return Scaffold(
       appBar: AppBar(
@@ -24,7 +27,8 @@ class AppointmentDetail extends StatelessWidget {
       body: SizedBox(
         height: double.infinity,
         child: Card(
-          color: Theme.of(context).primaryColorLight,//const Color.fromARGB(247, 106, 227, 235),
+          color: Theme.of(context)
+              .primaryColorLight, //const Color.fromARGB(247, 106, 227, 235),
           margin: const EdgeInsets.all(10),
           child: SingleChildScrollView(
             padding: const EdgeInsets.all(6),
@@ -32,9 +36,12 @@ class AppointmentDetail extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(
-                  appointment.date,
+                  DateFormat('dd-MM-yyyy')
+                      .format(appointment.createdAt)
+                      .toString(),
                   style: Theme.of(context).textTheme.headlineSmall!.copyWith(
-                        color: Colors.white,//const Color.fromARGB(255, 241, 232, 115),
+                        color: Colors
+                            .white, //const Color.fromARGB(255, 241, 232, 115),
                         fontWeight: FontWeight.bold,
                       ),
                 ),
@@ -46,10 +53,12 @@ class AppointmentDetail extends StatelessWidget {
                   mainAxisSize: MainAxisSize.max,
                   children: [
                     Container(
-                      decoration: const BoxDecoration(
-                        color: Color.fromARGB(255, 141, 215, 250),//Colors.red,
+                      decoration: BoxDecoration(
+                        color: appointment.status == 'waiting'
+                            ? const Color.fromARGB(255, 245, 65, 56)
+                            : const Color.fromARGB(
+                                255, 141, 215, 250), //Colors.red,
                         shape: BoxShape.circle,
-                        
                       ),
                       margin: const EdgeInsets.only(
                         top: 20,
@@ -61,7 +70,7 @@ class AppointmentDetail extends StatelessWidget {
                       width: 50,
                       child: Center(
                         child: Text(
-                          appointment.id,
+                          appointment.status[0].toUpperCase(),
                           style: Theme.of(context)
                               .textTheme
                               .headlineMedium!
@@ -88,7 +97,8 @@ class AppointmentDetail extends StatelessWidget {
                         padding: const EdgeInsets.all(8.0),
                         child: Center(
                           child: Text(
-                            appointment.time,
+                            //change this
+                            slot,
                             style: Theme.of(context)
                                 .textTheme
                                 .headlineSmall!
@@ -119,7 +129,7 @@ class AppointmentDetail extends StatelessWidget {
                               department,
                               style: Theme.of(context)
                                   .textTheme
-                                  .headlineMedium!
+                                  .headlineSmall!
                                   .copyWith(color: Colors.black),
                             ),
                           ],
@@ -128,15 +138,17 @@ class AppointmentDetail extends StatelessWidget {
                           color: Colors.black,
                         ),
                         Text(
-                          'Dr Sanjay Gagoi',
+                          //change this
+                          doctorName,
                           style: Theme.of(context)
                               .textTheme
-                              .headlineMedium!
+                              .headlineSmall!
                               .copyWith(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.bold,
-                                  decoration: TextDecoration.underline,
-                                  decorationColor: Colors.black,),
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold,
+                                decoration: TextDecoration.underline,
+                                decorationColor: Colors.black,
+                              ),
                         ),
                         const SizedBox(
                           height: 15,
@@ -152,7 +164,7 @@ class AppointmentDetail extends StatelessWidget {
                                   decorationColor: Colors.black),
                         ),
                         Text(
-                          appointment.description,
+                          appointment.concern,
                           style: Theme.of(context)
                               .textTheme
                               .titleLarge!

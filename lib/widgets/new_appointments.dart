@@ -1,30 +1,34 @@
 import 'package:book_my_slot/model/appointment.dart';
 import 'package:book_my_slot/screens/tabs.dart';
+import 'package:book_my_slot/services/appointment_service.dart';
 import 'package:book_my_slot/utils/color.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
 import 'package:intl/intl.dart';
 
+import '../providers/user_provider.dart';
+
 const uuid = Uuid();
 
-class NewAppointment extends StatefulWidget {
+class NewAppointment extends ConsumerStatefulWidget {
   const NewAppointment({super.key, required this.onAddExpense});
 
-  final void Function(Appointment appointment) onAddExpense;
-
+  final Function() onAddExpense;
   @override
-  State<StatefulWidget> createState() {
+  ConsumerState<ConsumerStatefulWidget> createState() {
     return _NewAppointment();
   }
 }
 
-class _NewAppointment extends State<NewAppointment> {
+class _NewAppointment extends ConsumerState<NewAppointment> {
   final _descriptionController = TextEditingController();
   final time = TimeOfDay.fromDateTime(DateTime.now()).toString();
   DateTime? _selectedDate;
   final formatter = DateFormat.yMd();
   Department _selectedDepartment = Department.psychologist;
   var count = 2;
+  AppointmentService appointmentService = AppointmentService();
 
   void _presentDatePicker() async {
     final now = DateTime.now();
@@ -40,27 +44,25 @@ class _NewAppointment extends State<NewAppointment> {
     });
   }
 
-  void _submitExpenseData() {
-    if ( _descriptionController.text.trim().isEmpty ||
-        _selectedDate == null) {
+  void _submitExpenseData(WidgetRef ref) {
+    if (_descriptionController.text.trim().isEmpty || _selectedDate == null) {
       showDialog(
         context: context,
         builder: (ctx) => AlertDialog(
-          title: const Text('Invalid input',
-          
+          title: const Text(
+            'Invalid input',
           ),
           content: const Text(
             'Please make sure a valid name, description , date and department was entered.',
-            
           ),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.pop(ctx);
               },
-              child: const Text('Okay',
-              style: TextStyle(
-            ),
+              child: const Text(
+                'Okay',
+                style: TextStyle(),
               ),
             )
           ],
@@ -68,16 +70,25 @@ class _NewAppointment extends State<NewAppointment> {
       );
       return;
     }
-    final formTime = time.substring(10, time.length - 1);
-    final Appointment newAppointment = Appointment(
-      id: (appointments.length+1).toString(),
-      description: _descriptionController.text,
-      time: formTime,
-      date: DateFormat('dd-MM-yyyy').format(_selectedDate!),
-      department: _selectedDepartment,
-    );
 
-    widget.onAddExpense(newAppointment);
+    var specialitiy = _selectedDepartment.toString().split('.')[1];
+    var date = DateFormat('dd-MM-yyyy').format(_selectedDate!);
+    var description = _descriptionController.text;
+    var user = ref.read(userProvider);
+
+    var firstChar = specialitiy[0].toUpperCase();
+    specialitiy = specialitiy.substring(1);
+    specialitiy = firstChar + specialitiy;
+
+    appointmentService.setAppointment(
+        ref: ref,
+        context: context,
+        description: description,
+        date: date,
+        speciality: specialitiy,
+        email: user.email);
+
+    widget.onAddExpense();
     Navigator.pop(context);
   }
 
@@ -90,21 +101,20 @@ class _NewAppointment extends State<NewAppointment> {
   @override
   Widget build(BuildContext context) {
     final keyboardSpace = MediaQuery.of(context).viewInsets.bottom;
-    
 
     return LayoutBuilder(builder: (ctx, constraints) {
       final width = constraints.maxHeight;
 
       return Container(
         decoration: BoxDecoration(
-                  color: Theme.of(context).primaryColorLight,
-                  shape: BoxShape.rectangle,
-                  borderRadius: BorderRadius.circular(15),
-                  border: Border.all(
-                    width: 3,
-                    color: Colors.black,
-                  ),
-                ),
+          color: Theme.of(context).primaryColorLight,
+          shape: BoxShape.rectangle,
+          borderRadius: BorderRadius.circular(15),
+          border: Border.all(
+            width: 3,
+            color: Colors.black,
+          ),
+        ),
         height: width,
         child: SingleChildScrollView(
           child: Padding(
@@ -117,8 +127,7 @@ class _NewAppointment extends State<NewAppointment> {
                   height: 16,
                 ),
                 TextField(
-                  style: const TextStyle(
-                      fontWeight: FontWeight.bold),
+                  style: const TextStyle(fontWeight: FontWeight.bold),
                   controller: _descriptionController,
                   decoration: const InputDecoration(
                     label: Text('Description'),
@@ -135,7 +144,9 @@ class _NewAppointment extends State<NewAppointment> {
                       _selectedDate == null
                           ? 'No date selected'
                           : DateFormat('dd-MM-yyyy').format(_selectedDate!),
-                      style: const TextStyle(fontSize: 20,),
+                      style: const TextStyle(
+                        fontSize: 20,
+                      ),
                     ),
                     const Spacer(),
                     IconButton(
@@ -158,7 +169,6 @@ class _NewAppointment extends State<NewAppointment> {
                           value: department,
                           child: Text(
                             department.name.toUpperCase(),
-                            
                           ),
                         ),
                       )
@@ -183,13 +193,17 @@ class _NewAppointment extends State<NewAppointment> {
                         },
                         child: const Text(
                           'Cancel',
-                          style: TextStyle(color: Color.fromARGB(255, 255, 145, 180),fontSize: 20,),
+                          style: TextStyle(
+                            color: Color.fromARGB(255, 255, 145, 180),
+                            fontSize: 20,
+                          ),
                         )),
                     ElevatedButton(
-                      onPressed: _submitExpenseData,
+                      onPressed: () {
+                        _submitExpenseData(ref);
+                      },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.white
-                      ),
+                          backgroundColor: Colors.white),
                       child: const Text(
                         'Save Appointment',
                         style: TextStyle(

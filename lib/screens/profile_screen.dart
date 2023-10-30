@@ -1,9 +1,7 @@
+import 'package:book_my_slot/model/user.dart';
 import 'package:book_my_slot/providers/user_provider.dart';
 import 'package:book_my_slot/services/auth_services.dart';
 import 'package:book_my_slot/utils/color.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -29,8 +27,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   final AuthService authService = AuthService();
   final _form = GlobalKey<FormState>();
 
-
-  void _submit() async {
+  void _submit(WidgetRef ref) async {
     final isValid = _form.currentState!.validate();
 
     if (!isValid ||
@@ -71,34 +68,25 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
 
     _form.currentState!.save();
 
-    final authenticatedUser = FirebaseAuth.instance.currentUser!;
+    final user = ref.read(userProvider);
 
-    try {
-      ScaffoldMessenger.of(context).clearSnackBars();
-      ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Your Data has been updated.')));
-      await FirebaseFirestore.instance
-          .collection('users')
-          .doc(authenticatedUser.uid)
-          .set({
-        'name': _enteredName,
-        'email': _enteredEmail,
-        'image_url': _imageUrl,
-      });
-    } on FirebaseAuthException catch (error) {
-      if (error.code == 'email-already-in-use') {
-        // ...
-      }
-      ScaffoldMessenger.of(context).clearSnackBars();
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(error.message ?? 'Authentication failed.'),
-        ),
-      );
-    }
+    var newUser = User(
+      name: _enteredName,
+      email: _enteredEmail,
+      phone: _enteredPhone,
+      location: user.location,
+      gender: user.gender,
+      role: user.role,
+      password: user.password,
+      token: user.token,
+    );
+
+    ref.watch(userProvider.notifier).setUserFromModel(newUser);
+
+    await authService.updateUser(context: context, ref: ref);
   }
 
-  void getData(WidgetRef ref){
+  void getData(WidgetRef ref) {
     final user = ref.read(userProvider);
 
     setState(() {
@@ -109,7 +97,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
       _enteredPhone = user.phone;
       phoneController.text = _enteredPhone;
     });
-    kDebugMode? print(user) : null;
+    //kDebugMode ? print(user) : null;
   }
 
   @override
@@ -226,12 +214,14 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                               return null;
                             },
                             onSaved: (value) {
-                              _enteredName = value!;
+                              _enteredPhone = value!;
                             },
                           ),
                           const SizedBox(height: 12),
                           ElevatedButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              _submit(ref);
+                            },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Theme.of(context)
                                   .colorScheme

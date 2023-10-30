@@ -1,6 +1,6 @@
 const appointmentModel=require('../models/appointmentModel');
 const doctorModel=require('../models/doctorModel');
-const userModel=require('../models/userModel')
+const userModel=require('../models/user')
 
 
 
@@ -17,7 +17,7 @@ const twilio=require('twilio')(process.env.Twilio_SID,process.env.Twilio_AUTH);
 const addAppointment=async (req,res)=>{
     try{
         let data=req.body;
-        
+        let user = await userModel.findOne({email: data.email});
         let availableDoctor=await doctorModel.findOne({present: true,speciality: data.speciality}).sort({inLine: 1});
         
         if(availableDoctor){
@@ -37,22 +37,17 @@ const addAppointment=async (req,res)=>{
         // console.log('HH:',slotHH,' MM:',slotMM);
         time.setHours(slotHH),time.setMinutes(slotMM),time.setSeconds(0);
         await doctorModel.findOneAndUpdate({_id: availableDoctor._id},availableDoctor);
-        const doctorName=availableDoctor.firstname+" "+availableDoctor.lastname
-        const newAppointment=new appointmentModel({...data,doctorId: availableDoctor._id,doctorName: doctorName,slot: time.toLocaleString(),phone: availableDoctor.phone});
-        const patient= await userModel.findOne({_id: newAppointment.patientId});
-        const patientPhone=patient.phone;
-    
-
         
-
-
+        const doctorName=availableDoctor.firstname+" "+availableDoctor.lastname
+        const newAppointment=new appointmentModel({patientId: user._id,speciality: data.speciality,patientPhone: user.phone,patientName: user.name,doctorId: availableDoctor._id,concern:data.description,doctorName: doctorName,slot: time.toLocaleString(),phone: availableDoctor.phone});
+        console.log(newAppointment);
 
         let resp=await newAppointment.save();
         try{
             const msgRes=await twilio.messages.create({
                 from: "+12564747323",
-                to: `+91${patientPhone}`,
-                body: `.\nDear ${patient.name},\nWe are pleased to confirm the successful booking of your appointment at Emmet Hospital. Your health and well-being are our top priorities, and we look forward to providing you with exceptional care.\nAppointment Details:\nDoctor:Dr. ${newAppointment.doctorName}\nExpected Slot: ${newAppointment.slot}\nPlease arrive 15 minutes prior to your appointment to complete any necessary paperwork and ensure a smooth check-in process. If you have any medical records, test results, or relevant documents, kindly bring them with you.\nIf you have any questions or require further information, please feel free to contact at ${newAppointment.phone}\nThank you for choosing Emmet Hospital for your healthcare needs. We look forward to serving you and assisting you on your journey to better health.\nSincerely,\nTeam Emmet
+                to: `+91${user.phone}`,
+                body: `.\nDear ${user.name},\nWe are pleased to confirm the successful booking of your appointment at Emmet Hospital. Your health and well-being are our top priorities, and we look forward to providing you with exceptional care.\nAppointment Details:\nDoctor:Dr. ${newAppointment.doctorName}\nExpected Slot: ${newAppointment.slot}\nPlease arrive 15 minutes prior to your appointment to complete any necessary paperwork and ensure a smooth check-in process. If you have any medical records, test results, or relevant documents, kindly bring them with you.\nIf you have any questions or require further information, please feel free to contact at ${newAppointment.phone}\nThank you for choosing Emmet Hospital for your healthcare needs. We look forward to serving you and assisting you on your journey to better health.\nSincerely,\nTeam Emmet
                 `
             })
         if(msgRes){console.log('Message sent successfully');}
@@ -63,11 +58,11 @@ const addAppointment=async (req,res)=>{
     
         
         
-        res.status(201).send({message: 'Appointment Booked Successfully',success: true});
+        res.status(200).send(true);
         }
         else{
             
-            const info={patientId: data.patientId,patientName: data.patientName,concern: data.concern,status: "waiting",speciality: data.speciality};
+            const info={patientId: user._id,patientName: user.name,concern: data.description,status: "waiting",speciality: data.speciality};
             const newAppointment=new appointmentModel(info);
             let resp=await newAppointment.save();
         res.status(201).send({message: 'Appointment Waitlisted',success: true});
@@ -135,18 +130,23 @@ const getAppointments=async(req,res)=>{
         if(user.role=='admin'){
 
             const app=await appointmentModel.find().sort({createdAt: -1});
-            res.status(200).send({success: true,message: `Apppointment Fetched Successfully`,app});
+            res.status(200).send({app});
         }
         else if(user.role=='doctor'){
             const docId=await doctorModel.findOne({email: user.email});
+            if(!docId){
+                return res.status(400).send({success: false,message: 'Doctor not found'});
+            }
             const app=await appointmentModel.find({doctorId: docId._id}).sort({createdAt: -1});
             
-            res.status(200).send({success: true,message: `Apppointment Fetched Successfully`,app});
+            res.status(200).send({app});
         }
         else{
-           
-            const app=await appointmentModel.find({patientId: user.id}).sort({createdAt: -1});
-            res.status(200).send({success: true,message: `Apppointment Fetched Successfully`,app});
+           const usr=await userModel.findOne({email: user.email});
+           if(usr==null){
+               return res.status(400).send({success: false,message: 'User not found'});}
+            const app=await appointmentModel.find({patientId: usr._id}).sort({createdAt: -1});
+            res.status(200).send({app});
         }
     }
     catch(error){

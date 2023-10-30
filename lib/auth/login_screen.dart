@@ -56,6 +56,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             password: _enteredPassword,);
       } else {
         authService.signUpUser(
+          id: '',
           context: context,
           name: _enteredName,
           email: _enteredEmail,

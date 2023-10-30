@@ -93,17 +93,14 @@ const getUsers=async (req,res)=>{
 
 const profileController = async (req, res) => {
     try {
-      const data=req.body.values;
+      const data=req.body;
       console.log(data);
       
-      await userModel.findOneAndUpdate({_id: req.body._id},data);
+      await userModel.findOneAndUpdate({email: data.email},data);
       
-      res.status(200).json({message: 'Profile Updated Successfully', success: true});
+      res.status(200).json(true);
     } catch (error) {
-      res.status(400).json({
-        message: `profileController ${error.message}`,
-        success: false,
-      });
+      res.status(500).json({message: `profileController ${error.message}`,success: false});
     }
   };
 
